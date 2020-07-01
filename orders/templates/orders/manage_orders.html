@@ -1,0 +1,56 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block main %}
+<a class="right" href="{% url 'manage_orders_completed' %}"><button class="btn btn-sm btn-outline-primary">Completed</button></a>
+<a class="right" href="{% url 'manage_orders' %}"><button class="btn btn-sm btn-outline-primary">Pending</button></a>
+<h1>All Orders</h1>
+<hr>
+<div class="row">
+    {% for order in orders %}
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <a class="right" href="{% url 'manage_order_detail' order.id %}"><button class="btn btn-sm btn-outline-secondary">Detail</button></a>
+                <h5 class="card-title">Order {{ order.id }}</h5>
+                <h6 class="card-subtitle mb-2">{{ order.client }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">{{ order.time|date:"Y/m/d H:i:s" }}</h6>
+                <hr>
+                <ol class="padding1">
+                    {% for x in order.product.all %}
+                    <li>{{ x.name }} ${{ x.price }}</li>
+                    {% endfor %}
+                </ol>
+                <hr>
+                <span>Status: <b>{{ order.get_status_display }}</b></span>
+                <span class="right">Total: ${{ order.total_price }}</span>
+                <hr>
+                <form class="right" action="{% url 'change_order_status' order.id %}" method="post">
+                    {% csrf_token %}
+                    <select name="status" id="">
+                        <option value="0">Pending</option>
+                        <option value="1">Preparing</option>
+                        <option value="2">Delivered</option>
+                        <option value="3">Completed</option>
+                    </select>
+                    <button class="btn btn-sm btn-outline-primary">Change Status</button>
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .right {
+        float: right;
+    }
+
+    .padding1 {
+        padding-left: 20px;
+    }
+</style>
+{% endblock %}

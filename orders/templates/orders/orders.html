@@ -1,0 +1,44 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block title %}Order{% endblock %}
+
+{% block main %}
+<a class="right" href="{% url 'orders_completed' %}"><button class="btn btn-sm btn-outline-primary">Completed</button></a>
+<a class="right" href="{% url 'orders' %}"><button class="btn btn-sm btn-outline-primary">Pending</button></a>
+<h1>My Orders</h1>
+<hr>
+<div class="row">
+    {% for order in orders %}
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <a class="right" href="{% url 'order' order.id %}"><button class="btn btn-sm btn-outline-secondary">Detail</button></a>
+                <h5 class="card-title">Order number: {{ order.id }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ order.time|date:"Y/m/d H:i:s" }}</h6>
+                <hr>
+                <ol class="padding1">
+                    {% for x in order.product.all %}
+                    <li>{{ x.name }} ${{ x.price }}</li>
+                    {% endfor %}
+                </ol>
+                <hr>
+                <span>Status: <b>{{ order.get_status_display }}</b></span>
+                <span class="right">Total: ${{ order.total_price }}</span>
+            </div>
+        </div>
+        <br>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .right {
+        float: right;
+    }
+
+    .padding1 {
+        padding-left: 20px;
+    }
+</style>
+{% endblock %}

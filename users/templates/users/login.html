@@ -1,0 +1,44 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-5">
+        <h3 class="pt-3">Login</h3>
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" id="username" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" id="inputPassword" name="password" placeholder="Password"
+                    required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-7">
+        <h3 class="pt-3">Register</h3>
+        <form action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% for error in field.errors %}
+                <li style="color: red">{{ error }}</li>
+                {% endfor %}
+                {% if field.help_text %}
+                <small style="color: grey">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock%}

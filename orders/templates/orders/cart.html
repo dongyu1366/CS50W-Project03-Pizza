@@ -1,0 +1,62 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block title %}Cart{% endblock %}
+
+{% block main %}
+<h1>My Cart</h1>
+<hr>
+<div class="row">
+    {% for product, extra in products_list %}
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <a class="right" href="{% url 'delete_product' product.id %}" class="card-link"><img src="{% static 'orders/img/delete.svg' %}" width="15" height="15" alt=""></a>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ product.flavor }} {{ product.size }}</h6>
+                <h6>${{ product.price }}</h6>
+                <hr>
+                <h6>Toppings or add-ons</h6>
+                {% for x in extra %}
+                {% if x != "" %}
+                <i>{{ x }}</i>
+                {% else %}
+                <i>None</i>
+                {% endif %}
+                <br>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+    </div>
+    {% endfor %}
+</div>
+
+<div>
+    <h2 id="total_price">Total: ${{ total_price }}</h2>
+    <form class="right" action="{% url 'placeorder' %}" method="post">
+        {% csrf_token %}
+        <input class="btn btn-primary" type='submit' value='Placeorder' name='placeorder' onClick='return confirmSubmit()'>
+    </form>
+</div>
+
+<script>
+    function confirmSubmit() {
+        var agree = confirm('Are you sure to placeorder?');
+        if (agree)
+            return true;
+        else
+            return false;
+    }
+</script>
+
+<style>
+    h2 {
+        text-align: right;
+    }
+
+    .right {
+        float: right;
+    }
+</style>
+{% endblock %}

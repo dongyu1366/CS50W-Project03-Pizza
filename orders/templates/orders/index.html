@@ -1,0 +1,202 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'orders/index.css' %}">
+{% endblock %}
+
+{% block main %}
+<h1>Our Menu</h1>
+
+<div class="pizza padding2">
+    <h3 class="head3">Regular Pizza</h3>
+    {% for regular_pizza in regular_pizzas %}
+    <form class="row mb-3" action="{% url 'add_pizza' %}" method="POST">
+        {% csrf_token %}
+        <div class="col-md-2">
+            {{ regular_pizza.get_flavor_display }}
+        </div>
+        <div class="col-md-7">
+            {% for i in regular_pizza.flavor %}
+            <div class="form-group inline">
+                <select name="topping{{ i }}" id="">
+                    {% for topping in toppings %}
+                    <option value="{{ topping }}">{{ topping }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% empty %}
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <select name="price" id="">
+                <option value="Small#{{ regular_pizza.small_price }}">
+                    Small: ${{ regular_pizza.small_price }}
+                </option>
+                <option value="Large#{{ regular_pizza.large_price }}">
+                    Large: ${{ regular_pizza.large_price }}
+                </option>
+            </select>
+            <button name="pizza" value="Regular Pizza#{{ regular_pizza.get_flavor_display }}" class="inline-block"
+                type="submit">Add</button>
+        </div>
+    </form>
+    <hr>
+    {% endfor %}
+</div>
+
+<div class="pizza padding2">
+    <h3 class="head3">Sicilian Pizza</h3>
+    {% for sicilian_pizza in sicilian_pizzas %}
+    <form action="{% url 'add_pizza' %}" method="POST" class="row mb-3">
+        {% csrf_token %}
+        <div class="col-md-2">
+            {{ sicilian_pizza.get_flavor_display }}
+        </div>
+        <div class="col-md-7">
+            {% for i in sicilian_pizza.flavor %}
+            <div class="form-group inline">
+                <select name="topping{{ i }}" id="">
+                    {% for topping in toppings %}
+                    <option value="{{ topping }}">{{ topping }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% empty %}
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <select name="price" id="">
+                <option value="Small#{{ sicilian_pizza.small_price }}">
+                    Small: ${{ sicilian_pizza.small_price }}
+                </option>
+                <option value="Large#{{ sicilian_pizza.large_price }}">
+                    Large: ${{ sicilian_pizza.large_price }}
+                </option>
+            </select>
+            <button name="pizza" value="Sicilian Pizza#{{ sicilian_pizza.get_flavor_display }}" class="inline-block"
+                type="submit">Add</button>
+        </div>
+    </form>
+    <hr>
+    {% endfor %}
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <div class="sub">
+            <h3 class="head3 padding2">Sub</h3>
+            {% for sub in subs %}
+            <form class="row padding2" action="{% url 'add_sub' %}" method="post">
+                {% csrf_token %}
+                <div class="col-lg-3">
+                    {{ sub.flavor }}
+                </div>
+                <div class="col-lg-5">
+                    <select class="selectpicker" multiple data-live-search="true" name="addon">
+                        <option selected disabled>Select add-ons</option>
+                        {% for addon in addons %}
+                        <option value="{{ addon }}">{{ addon }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-4">
+                    <select class="inline-block" name="price" id="">
+                        <option value="Small#{{ sub.small_price }}">Small: ${{ sub.small_price }}</option>
+                        <option value="Large#{{ sub.large_price }}">Large: ${{ sub.large_price }}</option>
+                    </select>
+                    <button name="sub" value="{{ sub.flavor }}" class="inline-block" type="submit">Add</button>
+                </div>
+            </form>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="pasta">
+            <h3 class="head3 padding2">Pasta</h3>
+            {% for pasta in pastas %}
+            <form class="row padding2" action="{% url 'add_pasta' pasta.id %}" method="post">
+                {% csrf_token %}
+                <div class="col-lg-6">
+                    {{ pasta.flavor }}
+                </div>
+                <div class="col-lg-3">
+                    ${{ pasta.price }}
+                </div>
+                <div class="col-lg-3">
+                    <button class="inline-block" type="submit">Add</button>
+                </div>
+            </form>
+            <hr>
+            {% endfor %}
+        </div>
+
+        <div class="salads">
+            <h3 class="head3 padding2">Salads</h3>
+            {% for salad in salads %}
+            <form class="row padding2" action="{% url 'add_salad' salad.id %}" method="post">
+                {% csrf_token %}
+                <div class="col-lg-6">
+                    {{ salad.flavor }}
+                </div>
+                <div class="col-lg-3">
+                    ${{ salad.price }}
+                </div>
+                <div class="col-lg-3">
+                    <button class="inline-block" type="submit">Add</button>
+                </div>
+            </form>
+            <hr>
+            {% endfor %}
+        </div>
+
+        <div class="platters">
+            <h3 class="head3 padding2">Dinner platters</h3>
+            {% for platter in dinner_platters %}
+            <form class="row padding2" action="{% url 'add_platter' %}" method="post">
+                {% csrf_token %}
+                <div class="col-lg-4">
+                    {{ platter.flavor }}
+                </div>
+                <div class="col-lg-5">
+                    <select class="inline-block" name="price" id="">
+                        <option value="Small#{{ platter.small_price }}">Small: ${{ platter.small_price }}
+                        </option>
+                        <option value="Large#{{ platter.large_price }}">Large: ${{ platter.large_price }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <button name="platter" value="{{ platter.flavor }}" class="inline-block" type="submit">Add</button>
+                </div>
+            </form>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .padding2 {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .head3 {
+        background-color: rgb(241, 231, 190);
+    }
+
+    .pizza,
+    .sub,
+    .pasta,
+    .salads,
+    .platters {
+        background-color: rgb(235, 227, 218);
+    }
+</style>
+
+{% endblock %}

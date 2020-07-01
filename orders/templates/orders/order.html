@@ -1,0 +1,35 @@
+{% extends "orders/base.html" %}
+{% load static %}
+
+{% block title %}Order{% endblock %}
+
+{% block main %}
+<h1>Products in the order</h1>
+<hr>
+<div class="row">
+    {% for product, extra in products_list %}
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Order number: {{ product.order.id }}</h5>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ product.flavor }} {{ product.size }}</h6>
+                <h6>${{ product.price }}</h6>
+                <hr>
+                <h6>Toppings or add-ons</h6>
+                {% for x in extra %}
+                {% if x != "" %}
+                <i>{{ x }}</i>
+                {% else %}
+                <i>None</i>
+                {% endif %}
+                <br>
+                {% endfor %}
+                <hr>
+            </div>
+        </div>
+        <br>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
